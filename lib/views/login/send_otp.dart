@@ -7,6 +7,9 @@ class SendOtp extends StatefulWidget {
 
 class _SendOtpState extends State<SendOtp> {
   
+  String _phoneNumber;
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+
   double _height;
   double _width;
   TextEditingController phoneNumberController = TextEditingController();
@@ -14,6 +17,26 @@ class _SendOtpState extends State<SendOtp> {
   @override
   void initState() {
     super.initState();
+  }
+
+  String validatePhoneNumber(String value) {
+    if(value.isEmpty){
+      return 'Phone Number is required';
+    } 
+    Pattern pattern = r'(^[0-9]{10}$)';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value)) {
+      return 'Enter Valid Phone Number';
+    }
+    return null;
+  }
+
+  validateAndSaveForm() {
+    if (_formKey.currentState.validate()) {
+      return;
+    }
+
+    _formKey.currentState.save();
   }
 
   @override
@@ -24,19 +47,22 @@ class _SendOtpState extends State<SendOtp> {
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            height: _height,
-            width: _width,
-            child: Column(
-              children: <Widget>[
-                imageRow(),
-                loginTitleRow(),
-                loginTextRow(),
-                phoneNumberTextFieldRow(),
-                loginButtonRow(),
-                signUpTextRow(),
-              ],
+        child: Container(
+          height: _height,
+          width: _width,
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  imageRow(),
+                  loginTitleRow(),
+                  loginTextRow(),
+                  phoneNumberTextFormFieldRow(),
+                  loginButtonRow(),
+                  signUpTextRow(),
+                ],
+              ),
             ),
           ),
         ),
@@ -83,22 +109,32 @@ class _SendOtpState extends State<SendOtp> {
     );
   }
 
-  Widget phoneNumberTextFieldRow() {
+  Widget phoneNumberTextFormFieldRow() {
     return Container(
       margin: EdgeInsets.only(left: _width / 20, right: _width / 20),
       alignment: Alignment.topLeft,
-      child: TextField(
+      child: TextFormField(
         controller: phoneNumberController,
         obscureText: false,
         decoration: InputDecoration(
           labelText: "Phone Number",
+          labelStyle: TextStyle(color: Colors.grey),
           prefixText: "+91",
+          counterText: '',
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.orange[800]),
+          )
         ),
+        maxLength: 10,
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20,
         ),
         keyboardType: TextInputType.phone,
+        validator: validatePhoneNumber,
+        onSaved: (String value) {
+          _phoneNumber = value;
+        },
       ),
     );
   }
@@ -111,7 +147,7 @@ class _SendOtpState extends State<SendOtp> {
         color: Colors.orange[800],
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {},
+        onPressed: validateAndSaveForm,
         child: Text("LOGIN",
           textAlign: TextAlign.center,
           style: TextStyle(
