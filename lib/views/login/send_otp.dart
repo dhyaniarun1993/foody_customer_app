@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; 
+import 'package:foody_customer_app/business_logic/view_models/login/send_otp_viewmodel.dart';
 
 class SendOtp extends StatefulWidget {
 
@@ -8,6 +10,7 @@ class SendOtp extends StatefulWidget {
 class _SendOtpState extends State<SendOtp> {
   
   String _phoneNumber;
+  SendOtpViewModel viewModel = SendOtpViewModel();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   double _height;
@@ -31,12 +34,16 @@ class _SendOtpState extends State<SendOtp> {
     return null;
   }
 
-  validateAndSaveForm() {
-    if (_formKey.currentState.validate()) {
+  validateAndSaveForm() async {
+    if (!_formKey.currentState.validate()) {
       return;
     }
 
     _formKey.currentState.save();
+    bool success = await viewModel.sendOtp(_phoneNumber);
+    if (success) {
+      Navigator.of(context).pushNamed('LOGIN_VERIFY_OTP');
+    }
   }
 
   @override
@@ -47,21 +54,25 @@ class _SendOtpState extends State<SendOtp> {
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       body: SafeArea(
-        child: Container(
-          height: _height,
-          width: _width,
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  imageRow(),
-                  loginTitleRow(),
-                  loginTextRow(),
-                  phoneNumberTextFormFieldRow(),
-                  loginButtonRow(),
-                  signUpTextRow(),
-                ],
+        child: ChangeNotifierProvider<SendOtpViewModel>(
+          create: (context) => viewModel,
+          child: Container(
+            height: _height,
+            width: _width,
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    imageRow(),
+                    loginTitleRow(),
+                    loginTextRow(),
+                    phoneNumberTextFormFieldRow(),
+                    errorRow(),
+                    loginButtonRow(),
+                    signUpTextRow(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -139,6 +150,29 @@ class _SendOtpState extends State<SendOtp> {
     );
   }
 
+  Widget errorRow() {
+    return Consumer<SendOtpViewModel>(
+      builder: (context, model, child) {
+        if (model.hasError) {
+          return Container(
+            margin: EdgeInsets.only(left: _width / 20, right: _width / 20, top: _height / 90),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              model.errorMessage,
+              style: TextStyle(
+                color: Colors.red[800],
+                fontWeight: FontWeight.w400,
+                fontSize: 12
+              ),
+            ),
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+
   Widget loginButtonRow() {
     return Container(
       margin: EdgeInsets.only(left: _width / 20, right: _width / 20,  top: _height / 30),
@@ -178,7 +212,7 @@ class _SendOtpState extends State<SendOtp> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pushReplacementNamed('SIGNUP');
+              Navigator.of(context).pushNamed('SIGNUP');
             },
             child: Text(
               "Sign up",
