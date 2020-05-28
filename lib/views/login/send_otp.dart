@@ -59,12 +59,18 @@ class _SendOtpState extends State<SendOtp> {
           child: Container(
             height: _height,
             width: _width,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                image: AssetImage("assets/login_bg.jpg"),
+                fit: BoxFit.cover,
+              ),
+            ),
             child: SingleChildScrollView(
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    imageRow(),
                     loginTitleRow(),
                     loginTextRow(),
                     phoneNumberTextFormFieldRow(),
@@ -81,26 +87,15 @@ class _SendOtpState extends State<SendOtp> {
     );
   }
 
-  Widget imageRow() {
-    return Container(
-      child: Image.asset(
-        'assets/food_sketch.jpg',
-        fit: BoxFit.fitWidth,
-        width: _width,
-      ),
-      height: _height/2,
-    );
-  }
-
   Widget loginTitleRow() {
     return Container(
-      margin: EdgeInsets.only(left: _width / 20, top: _height / 30),
-      alignment: Alignment.topLeft,
+      margin: EdgeInsets.only(left: _width / 20, top: _height / 5),
+      alignment: Alignment.center,
       child: Text(
-        "LOGIN",
+        "Welcome",
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 20,
+          fontSize: 50,
         ),
       ),
     );
@@ -109,11 +104,12 @@ class _SendOtpState extends State<SendOtp> {
   Widget loginTextRow() {
     return Container(
       margin: EdgeInsets.only(left: _width / 20),
-      alignment: Alignment.topLeft,
+      alignment: Alignment.center,
       child: Text(
-        "Enter your phone number",
+        "Login to your account",
         style: TextStyle(
-          fontWeight: FontWeight.w200,
+          color: Colors.black,
+          fontWeight: FontWeight.w500,
           fontSize: 15,
         ),
       ),
@@ -122,14 +118,14 @@ class _SendOtpState extends State<SendOtp> {
 
   Widget phoneNumberTextFormFieldRow() {
     return Container(
-      margin: EdgeInsets.only(left: _width / 20, right: _width / 20),
-      alignment: Alignment.topLeft,
+      margin: EdgeInsets.only(left: _width / 25, right: _width / 25, top: _height / 20),
+      alignment: Alignment.center,
       child: TextFormField(
         controller: phoneNumberController,
         obscureText: false,
         decoration: InputDecoration(
           labelText: "Phone Number",
-          labelStyle: TextStyle(color: Colors.grey),
+          labelStyle: TextStyle(color: Colors.black),
           prefixText: "+91",
           counterText: '',
           focusedBorder: UnderlineInputBorder(
@@ -161,7 +157,7 @@ class _SendOtpState extends State<SendOtp> {
               model.errorMessage,
               style: TextStyle(
                 color: Colors.red[800],
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w600,
                 fontSize: 12
               ),
             ),
@@ -203,8 +199,8 @@ class _SendOtpState extends State<SendOtp> {
           Text(
             "Don't have an account?",
             style: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 12
+              fontWeight: FontWeight.w500,
+              fontSize: 14
             ),
           ),
           SizedBox(
@@ -218,7 +214,7 @@ class _SendOtpState extends State<SendOtp> {
               "Sign up",
               style: TextStyle(
                 fontWeight: FontWeight.w800,
-                color: Colors.orange[200],
+                color: Colors.orange[600],
                 fontSize: 17
               ),
             ),
