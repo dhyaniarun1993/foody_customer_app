@@ -15,8 +15,7 @@ class _SendOtpState extends State<SendOtp> {
 
   double _height;
   double _width;
-  TextEditingController phoneNumberController = TextEditingController();
-
+  
   @override
   void initState() {
     super.initState();
@@ -34,7 +33,7 @@ class _SendOtpState extends State<SendOtp> {
     return null;
   }
 
-  validateAndSaveForm() async {
+  validateAndSendOtp() async {
     if (!_formKey.currentState.validate()) {
       return;
     }
@@ -42,7 +41,7 @@ class _SendOtpState extends State<SendOtp> {
     _formKey.currentState.save();
     bool success = await viewModel.sendOtp(_phoneNumber);
     if (success) {
-      Navigator.of(context).pushNamed('LOGIN_VERIFY_OTP');
+      Navigator.of(context).pushNamed('LOGIN_VERIFY_OTP_SCREEN', arguments: {"phone_number": _phoneNumber});
     }
   }
 
@@ -52,7 +51,6 @@ class _SendOtpState extends State<SendOtp> {
     _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
       body: SafeArea(
         child: ChangeNotifierProvider<SendOtpViewModel>(
           create: (context) => viewModel,
@@ -71,12 +69,12 @@ class _SendOtpState extends State<SendOtp> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    loginTitleRow(),
-                    loginTextRow(),
-                    phoneNumberTextFormFieldRow(),
-                    errorRow(),
-                    loginButtonRow(),
-                    signUpTextRow(),
+                    _loginTitleRow(),
+                    _loginTextRow(),
+                    _phoneNumberTextFormFieldRow(),
+                    _errorRow(),
+                    _loginButtonRow(),
+                    _signUpTextRow(),
                   ],
                 ),
               ),
@@ -87,7 +85,7 @@ class _SendOtpState extends State<SendOtp> {
     );
   }
 
-  Widget loginTitleRow() {
+  Widget _loginTitleRow() {
     return Container(
       margin: EdgeInsets.only(left: _width / 20, top: _height / 5),
       alignment: Alignment.center,
@@ -101,7 +99,7 @@ class _SendOtpState extends State<SendOtp> {
     );
   }
 
-  Widget loginTextRow() {
+  Widget _loginTextRow() {
     return Container(
       margin: EdgeInsets.only(left: _width / 20),
       alignment: Alignment.center,
@@ -116,12 +114,11 @@ class _SendOtpState extends State<SendOtp> {
     );
   }
 
-  Widget phoneNumberTextFormFieldRow() {
+  Widget _phoneNumberTextFormFieldRow() {
     return Container(
       margin: EdgeInsets.only(left: _width / 25, right: _width / 25, top: _height / 20),
       alignment: Alignment.center,
       child: TextFormField(
-        controller: phoneNumberController,
         obscureText: false,
         decoration: InputDecoration(
           labelText: "Phone Number",
@@ -146,12 +143,12 @@ class _SendOtpState extends State<SendOtp> {
     );
   }
 
-  Widget errorRow() {
+  Widget _errorRow() {
     return Consumer<SendOtpViewModel>(
       builder: (context, model, child) {
         if (model.hasError) {
           return Container(
-            margin: EdgeInsets.only(left: _width / 20, right: _width / 20, top: _height / 90),
+            margin: EdgeInsets.only(left: _width / 25, top: _height / 90),
             alignment: Alignment.centerLeft,
             child: Text(
               model.errorMessage,
@@ -169,15 +166,15 @@ class _SendOtpState extends State<SendOtp> {
     );
   }
 
-  Widget loginButtonRow() {
+  Widget _loginButtonRow() {
     return Container(
-      margin: EdgeInsets.only(left: _width / 20, right: _width / 20,  top: _height / 30),
-      alignment: Alignment.topLeft,
+      margin: EdgeInsets.only(left: _width / 25, right: _width / 25, top: _height / 30),
+      alignment: Alignment.center,
       child: MaterialButton(
         color: Colors.orange[800],
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: validateAndSaveForm,
+        onPressed: validateAndSendOtp,
         child: Text("LOGIN",
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -190,7 +187,7 @@ class _SendOtpState extends State<SendOtp> {
     );
   }
 
-  Widget signUpTextRow() {
+  Widget _signUpTextRow() {
     return Container(
       margin: EdgeInsets.only(top: _height / 80.0),
       child: Row(
@@ -208,7 +205,7 @@ class _SendOtpState extends State<SendOtp> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pushNamed('SIGNUP');
+              Navigator.of(context).pushNamed('SIGNUP_SCREEN');
             },
             child: Text(
               "Sign up",

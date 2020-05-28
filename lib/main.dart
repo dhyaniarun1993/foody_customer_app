@@ -10,9 +10,9 @@ void main() {
     routes: <String, WidgetBuilder> {
       'SPLASH_SCREEN': (BuildContext context) => new SplashScreen(),
       'HOME_SCREEN': (BuildContext context) => new Home(),
-      'LOGIN_SEND_OTP': (BuildContext context) => new SendOtp(),
-      'LOGIN_VERIFY_OTP': (BuildContext context) => new VerifyOtp(),
-      'SIGNUP': (BuildContext context) => new Signup(),
+      'LOGIN_SEND_OTP_SCREEN': (BuildContext context) => new SendOtp(),
+      'LOGIN_VERIFY_OTP_SCREEN': (BuildContext context) => new VerifyOtp(),
+      'SIGNUP_SCREEN': (BuildContext context) => new Signup(),
     },
     initialRoute: 'SPLASH_SCREEN',
   ));

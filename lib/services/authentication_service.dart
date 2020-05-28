@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:foody_customer_app/services/dto/error_response.dart';
+import 'package:foody_customer_app/business_logic/models/remote/authentication/token_request.dart';
+import 'package:foody_customer_app/business_logic/models/remote/authentication/token_response.dart';
+import 'package:foody_customer_app/business_logic/models/remote/error/error_response.dart';
 
 class AuthenticationService {
   final Dio _dio = Dio();
@@ -30,6 +32,26 @@ class AuthenticationService {
         throw error;
       } else {
         ErrorResponse error = ErrorResponse("Something went wrong");
+        throw error;
+      }
+    }
+  }
+
+  Future<TokenResponse> getTokenByOtp(String phoneNumber, String otp) async {
+    try {
+      String basicAuth  = 'Basic ' + base64Encode(utf8.encode('$_clientID:$_clientSecret'));
+      TokenByOtpRequest request = TokenByOtpRequest(phoneNumber: phoneNumber, otp: otp, grantType: 'otp');
+      Response response =  await _dio.post('/v1/auth/token',
+        options: Options(headers: <String, String>{'authorization':  basicAuth}),
+        data: request.toJson());
+      TokenResponse tokenResponse = TokenResponse.fromJson(response.data);
+      return tokenResponse;
+    } on DioError catch(e) {
+      if (e.type == DioErrorType.RESPONSE) {
+        ErrorResponse error  = ErrorResponse.fromJson(e.response.data);
+        throw error;
+      } else {
+        ErrorResponse error  = ErrorResponse("Something went wrong");
         throw error;
       }
     }

@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-    Navigator.of(context).pushReplacementNamed('LOGIN_SEND_OTP');
+    Navigator.of(context).pushReplacementNamed('LOGIN_SEND_OTP_SCREEN');
   }
 
   @override void initState() {
