@@ -32,6 +32,8 @@ dependencies:
   build_runner: 1.10.0
   json_serializable: 3.3.0
   provider: 4.1.2
+  shared_preferences: ^0.4.3
+  get_it: ^1.0.3
 
 dev_dependencies:
   flutter_test:

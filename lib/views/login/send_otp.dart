@@ -51,49 +51,67 @@ class _SendOtpState extends State<SendOtp> {
     _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: ChangeNotifierProvider<SendOtpViewModel>(
           create: (context) => viewModel,
-          child: Container(
-            height: _height,
-            width: _width,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                image: AssetImage("assets/login_bg.jpg"),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: SingleChildScrollView(
-              child: Form(
+          child: Column(
+            children: <Widget>[
+              _titleBar(),
+              Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    _loginTitleRow(),
-                    _loginTextRow(),
+                    SizedBox(height: _height/ 12),
                     _phoneNumberTextFormFieldRow(),
+                    SizedBox(height: _height / 35),
                     _errorRow(),
+                    SizedBox(height: _height / 50),
                     _loginButtonRow(),
                     _signUpTextRow(),
                   ],
                 ),
               ),
-            ),
+            ]
           ),
         ),
       ),
     );
   }
 
+  Widget _titleBar() {
+    return Container(
+      padding: EdgeInsets.only(left: _width/20, bottom: _height/35),
+      height: _height / 3,
+      width: _width,
+      alignment: Alignment(-1.0, -1.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          colors: [
+            Colors.orange[400],
+            Colors.orange[200],
+          ],
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          _loginTitleRow(),
+          _loginTextRow(),
+        ],
+      ),
+    );
+  }
+
   Widget _loginTitleRow() {
     return Container(
-      margin: EdgeInsets.only(left: _width / 20, top: _height / 5),
-      alignment: Alignment.center,
       child: Text(
-        "Welcome",
+        "WELCOME",
         style: TextStyle(
+          color:  Colors.white,
           fontWeight: FontWeight.bold,
-          fontSize: 50,
+          fontSize: 40,
         ),
       ),
     );
@@ -101,12 +119,10 @@ class _SendOtpState extends State<SendOtp> {
 
   Widget _loginTextRow() {
     return Container(
-      margin: EdgeInsets.only(left: _width / 20),
-      alignment: Alignment.center,
       child: Text(
         "Login to your account",
         style: TextStyle(
-          color: Colors.black,
+          color: Colors.white,
           fontWeight: FontWeight.w500,
           fontSize: 15,
         ),
@@ -116,18 +132,28 @@ class _SendOtpState extends State<SendOtp> {
 
   Widget _phoneNumberTextFormFieldRow() {
     return Container(
-      margin: EdgeInsets.only(left: _width / 25, right: _width / 25, top: _height / 20),
+      margin: EdgeInsets.only(left: _width / 15, right: _width / 15),
       alignment: Alignment.center,
       child: TextFormField(
+        autofocus: true,
         obscureText: false,
         decoration: InputDecoration(
           labelText: "Phone Number",
-          labelStyle: TextStyle(color: Colors.black),
+          labelStyle: TextStyle(color: Colors.grey[500]),
           prefixText: "+91",
           counterText: '',
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.orange[800]),
-          )
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            borderSide: BorderSide(
+              color: Colors.grey,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            borderSide: BorderSide(
+              color: Colors.grey,
+            ),
+          ),
         ),
         maxLength: 10,
         style: TextStyle(
@@ -148,13 +174,12 @@ class _SendOtpState extends State<SendOtp> {
       builder: (context, model, child) {
         if (model.hasError) {
           return Container(
-            margin: EdgeInsets.only(left: _width / 25, top: _height / 90),
+            margin: EdgeInsets.only(left: _width / 12),
             alignment: Alignment.centerLeft,
             child: Text(
               model.errorMessage,
               style: TextStyle(
-                color: Colors.red[800],
-                fontWeight: FontWeight.w600,
+                color: Colors.red[500],
                 fontSize: 12
               ),
             ),
@@ -168,10 +193,13 @@ class _SendOtpState extends State<SendOtp> {
 
   Widget _loginButtonRow() {
     return Container(
-      margin: EdgeInsets.only(left: _width / 25, right: _width / 25, top: _height / 30),
+      margin: EdgeInsets.only(left: _width / 15, right: _width / 15),
       alignment: Alignment.center,
       child: MaterialButton(
-        color: Colors.orange[800],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        color: Colors.orange[500],
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: validateAndSendOtp,
@@ -180,7 +208,7 @@ class _SendOtpState extends State<SendOtp> {
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 18,
+            fontSize: 20,
           )
         ),
       )

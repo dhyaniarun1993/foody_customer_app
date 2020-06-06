@@ -1,11 +1,11 @@
 import 'package:foody_customer_app/business_logic/models/remote/authentication/token_response.dart';
 import 'package:foody_customer_app/business_logic/view_models/baseModel.dart';
 import 'package:foody_customer_app/constants/viewstate.dart';
-import 'package:foody_customer_app/services/authentication_service.dart';
+import 'package:foody_customer_app/repositories/authentication_repository.dart';
 
 class VerifyOtpViewModel extends BaseModel {
 
-  final _authenticationService = AuthenticationService();
+  final _authenticationRepository = AuthenticationRepository();
   bool hasError;
   String errorMessage;
 
@@ -16,7 +16,7 @@ class VerifyOtpViewModel extends BaseModel {
   Future<bool> verifyOtp(String phoneNumber, String otp) async {
     setState(ViewState.Busy);
     try {
-      TokenResponse response = await _authenticationService.getTokenByOtp(phoneNumber, otp);
+      await _authenticationRepository.getTokenByOtp(phoneNumber, otp);
       hasError = false;
       return true;
     } catch (e) {

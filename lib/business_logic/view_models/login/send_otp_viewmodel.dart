@@ -1,10 +1,10 @@
 import 'package:foody_customer_app/business_logic/view_models/baseModel.dart';
 import 'package:foody_customer_app/constants/viewstate.dart';
-import 'package:foody_customer_app/services/authentication_service.dart';
+import 'package:foody_customer_app/repositories/authentication_repository.dart';
 
 class SendOtpViewModel extends BaseModel {
 
-  final _authenticationService = AuthenticationService();
+  final _authenticationRepository = AuthenticationRepository();
   bool hasError;
   String errorMessage;
 
@@ -16,7 +16,7 @@ class SendOtpViewModel extends BaseModel {
     setState(ViewState.Busy);
 
     try {
-      await _authenticationService.sendOtp(phoneNumber);
+      await _authenticationRepository.sendOtp(phoneNumber);
       hasError = false;
       setState(ViewState.Idle);    
       return true;

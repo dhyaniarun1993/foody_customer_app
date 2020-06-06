@@ -5,7 +5,7 @@ import 'package:foody_customer_app/business_logic/models/remote/authentication/t
 import 'package:foody_customer_app/business_logic/models/remote/authentication/token_response.dart';
 import 'package:foody_customer_app/business_logic/models/remote/error/error_response.dart';
 
-class AuthenticationService {
+class AuthenticationProvider {
   final Dio _dio = Dio();
 
   // Todo: move the configuration out and have different config for different env
@@ -13,7 +13,7 @@ class AuthenticationService {
   final String _clientSecret = "zrS7EcNF8kfQyZErrHMnnJUnTGV5E638";
 
   // Todo: move the configuration out and have different config for different env
-  AuthenticationService() {
+  AuthenticationProvider() {
     _dio.options.baseUrl = "http://10.0.2.2:3000";
     _dio.options.connectTimeout = 1000;
     _dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
