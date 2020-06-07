@@ -21,7 +21,7 @@ class _SendOtpState extends State<SendOtp> {
     super.initState();
   }
 
-  String validatePhoneNumber(String value) {
+  String _validatePhoneNumber(String value) {
     if(value.isEmpty){
       return 'Phone Number is required';
     } 
@@ -33,7 +33,7 @@ class _SendOtpState extends State<SendOtp> {
     return null;
   }
 
-  validateAndSendOtp() async {
+  _validateAndSendOtp() async {
     if (!_formKey.currentState.validate()) {
       return;
     }
@@ -67,6 +67,7 @@ class _SendOtpState extends State<SendOtp> {
                     _errorRow(),
                     SizedBox(height: _height / 50),
                     _loginButtonRow(),
+                    SizedBox(height: _height / 80),
                     _signUpTextRow(),
                   ],
                 ),
@@ -83,7 +84,6 @@ class _SendOtpState extends State<SendOtp> {
       padding: EdgeInsets.only(left: _width/20, bottom: _height/35),
       height: _height / 3,
       width: _width,
-      alignment: Alignment(-1.0, -1.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -107,7 +107,7 @@ class _SendOtpState extends State<SendOtp> {
   Widget _loginTitleRow() {
     return Container(
       child: Text(
-        "WELCOME",
+        "LOGIN",
         style: TextStyle(
           color:  Colors.white,
           fontWeight: FontWeight.bold,
@@ -120,7 +120,7 @@ class _SendOtpState extends State<SendOtp> {
   Widget _loginTextRow() {
     return Container(
       child: Text(
-        "Login to your account",
+        "Enter your phone number to proceed",
         style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w500,
@@ -161,7 +161,7 @@ class _SendOtpState extends State<SendOtp> {
           fontSize: 20,
         ),
         keyboardType: TextInputType.phone,
-        validator: validatePhoneNumber,
+        validator: _validatePhoneNumber,
         onSaved: (String value) {
           _phoneNumber = value;
         },
@@ -202,7 +202,7 @@ class _SendOtpState extends State<SendOtp> {
         color: Colors.orange[500],
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: validateAndSendOtp,
+        onPressed: _validateAndSendOtp,
         child: Text("LOGIN",
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -217,7 +217,6 @@ class _SendOtpState extends State<SendOtp> {
 
   Widget _signUpTextRow() {
     return Container(
-      margin: EdgeInsets.only(top: _height / 80.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -233,7 +232,7 @@ class _SendOtpState extends State<SendOtp> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pushNamed('SIGNUP_SCREEN');
+              Navigator.of(context).pushReplacementNamed('SIGNUP_SCREEN');
             },
             child: Text(
               "Sign up",

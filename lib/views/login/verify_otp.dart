@@ -14,7 +14,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
   double _height;
   double _width;
 
-  final VerifyOtpViewModel viewModel = VerifyOtpViewModel();
+  final VerifyOtpViewModel _viewModel = VerifyOtpViewModel();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   @override
@@ -22,7 +22,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
     super.initState();
   }
 
-  String validateOTP(String value) {
+  String _validateOTP(String value) {
     if(value.isEmpty){
       return 'OTP is required';
     } 
@@ -34,13 +34,13 @@ class _VerifyOtpState extends State<VerifyOtp> {
     return null;
   }
 
-  validateAndVerifyOtp() async {
+  _validateAndVerifyOtp() async {
     if (!_formKey.currentState.validate()) {
       return;
     }
 
     _formKey.currentState.save();
-    bool success = await viewModel.verifyOtp(_phoneNumber, _otp);
+    bool success = await _viewModel.verifyOtp(phoneNumber: _phoneNumber, otp: _otp);
     if (success) {
       Navigator.of(context).pushNamedAndRemoveUntil('HOME_SCREEN', (Route<dynamic> route) => false);
     }
@@ -57,38 +57,10 @@ class _VerifyOtpState extends State<VerifyOtp> {
     return Scaffold(
       body: SingleChildScrollView(
         child: ChangeNotifierProvider<VerifyOtpViewModel>(
-          create: (context) => viewModel,
+          create: (context) => _viewModel,
           child: Column(
             children: <Widget>[
               _titleBar(),
-              // Container(
-              //   height: _height / 3,
-              //   width: _width,
-              //   decoration: BoxDecoration(
-              //     gradient: LinearGradient(
-              //       begin: Alignment.topCenter,
-              //       colors: [
-              //         Colors.orange[400],
-              //         Colors.orange[200],
-              //       ],
-              //     ),
-              //   ),
-              //   child: SafeArea(
-              //     child: Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: <Widget>[
-              //         IconButton(
-              //           icon: Icon(Icons.arrow_back),
-              //           color: Colors.white, 
-              //           onPressed: null
-              //         ),
-              //         SizedBox(height: _height / 8),
-              //         _otpTitleRow(),
-              //         _otpTextRow(),
-              //       ],
-              //     ),
-              //   ),
-              // ),
               Form(
                 key: _formKey,
                 child: Column(
@@ -113,7 +85,6 @@ class _VerifyOtpState extends State<VerifyOtp> {
     return Container(
       height: _height / 3,
       width: _width,
-      alignment: Alignment(-1.0, -1.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -213,7 +184,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
           fontSize: 20,
         ),
         keyboardType: TextInputType.phone,
-        validator: validateOTP,
+        validator: _validateOTP,
         onSaved: (String value) {
           _otp = value;
         },
@@ -255,7 +226,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
         color: Colors.orange[500],
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: validateAndVerifyOtp,
+        onPressed: _validateAndVerifyOtp,
         child: Text("VERIFY OTP",
           textAlign: TextAlign.center,
           style: TextStyle(

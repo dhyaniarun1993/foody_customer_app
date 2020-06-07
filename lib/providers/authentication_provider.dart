@@ -1,6 +1,7 @@
 import 'dart:convert';
-
+import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:foody_customer_app/business_logic/models/remote/authentication/signup_request.dart';
 import 'package:foody_customer_app/business_logic/models/remote/authentication/token_request.dart';
 import 'package:foody_customer_app/business_logic/models/remote/authentication/token_response.dart';
 import 'package:foody_customer_app/business_logic/models/remote/error/error_response.dart';
@@ -39,7 +40,7 @@ class AuthenticationProvider {
 
   Future<TokenResponse> getTokenByOtp(String phoneNumber, String otp) async {
     try {
-      String basicAuth  = 'Basic ' + base64Encode(utf8.encode('$_clientID:$_clientSecret'));
+      String basicAuth = 'Basic ' + base64Encode(utf8.encode('$_clientID:$_clientSecret'));
       TokenByOtpRequest request = TokenByOtpRequest(phoneNumber: phoneNumber, otp: otp, grantType: 'otp');
       Response response =  await _dio.post('/v1/auth/token',
         options: Options(headers: <String, String>{'authorization':  basicAuth}),
@@ -51,7 +52,32 @@ class AuthenticationProvider {
         ErrorResponse error  = ErrorResponse.fromJson(e.response.data);
         throw error;
       } else {
-        ErrorResponse error  = ErrorResponse("Something went wrong");
+        ErrorResponse error = ErrorResponse("Something went wrong");
+        throw error;
+      }
+    }
+  }
+
+  Future<void> signUp({
+    @required String phoneNumber, 
+    @required String email, 
+    @required String firstName, 
+    String lastName
+  }) async {
+    try {
+      String basicAuth =  'Basic ' + base64Encode(utf8.encode('$_clientID:$_clientSecret'));
+      SignUpRequest request = SignUpRequest(phoneNumber: phoneNumber, email: email,
+        firstName: firstName, lastName: lastName);
+      await _dio.post('/v1/register',
+        options: Options(headers: <String, String>{'authorization': basicAuth}),
+        data: request.toJson());
+      return;
+    } on DioError catch(e) {
+      if (e.type == DioErrorType.RESPONSE) {
+        ErrorResponse error = ErrorResponse.fromJson(e.response.data);
+        throw error;
+      } else {
+        ErrorResponse error = ErrorResponse("Something went wrong");
         throw error;
       }
     }
